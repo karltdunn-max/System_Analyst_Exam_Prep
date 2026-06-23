@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Systems Analyst Exam Prep</title>
+  <style>
+    :root {
+      --accent: #4fd1c5;
+      --accent-strong: #f6ad55;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: #02010a;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow: hidden;
+    }
+
+    .landing {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      cursor: pointer;
+    }
+
+    .landing img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Subtle overlay so the UI is readable against any part of the image */
+    .scrim-bottom {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 30%;
+      background: linear-gradient(to top, rgba(2, 1, 10, 0.85), rgba(2, 1, 10, 0));
+      pointer-events: none;
+    }
+
+    .enter-row {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      z-index: 5;
+    }
+
+    .enter-btn {
+      padding: 14px 36px;
+      border-radius: 999px;
+      border: 1px solid var(--accent);
+      background: rgba(79, 209, 197, 0.15);
+      color: #e2e8f0;
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      transition: all 0.2s ease-out;
+    }
+
+    .enter-btn:hover {
+      background: rgba(79, 209, 197, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .countdown {
+      color: #a0aec0;
+      font-size: 0.85rem;
+      letter-spacing: 0.06em;
+    }
+
+    .countdown strong {
+      color: var(--accent-strong);
+    }
+
+    .progress-track {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      z-index: 5;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+      transition: width 0.2s linear;
+    }
+
+    @media (max-width: 600px) {
+      .enter-btn { font-size: 0.9rem; padding: 12px 26px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="landing" id="landing">
+    <img src="landing_page.png" alt="Systems Analyst Exam Prep - REST, SQL, AWS, Agile, Java & Spring" />
+    <div class="scrim-bottom"></div>
+
+    <div class="enter-row">
+      <button class="enter-btn" id="enterBtn">Start Exam Prep</button>
+      <div class="countdown" id="countdown">Entering automatically in <strong>15</strong>s — click anywhere to skip</div>
+    </div>
+
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <script>
+    const DEST = 'main.html';
+    const TOTAL_SECONDS = 15;
+    let secondsLeft = TOTAL_SECONDS;
+    let navigated = false;
+
+    const countdownEl = document.getElementById('countdown');
+    const progressFill = document.getElementById('progressFill');
+
+    function go() {
+      if (navigated) return;
+      navigated = true;
+      window.location.href = DEST;
+    }
+
+    const timer = setInterval(() => {
+      secondsLeft -= 1;
+      const pct = ((TOTAL_SECONDS - secondsLeft) / TOTAL_SECONDS) * 100;
+      progressFill.style.width = pct + '%';
+
+      if (secondsLeft <= 0) {
+        clearInterval(timer);
+        go();
+      } else {
+        countdownEl.innerHTML = `Entering automatically in <strong>${secondsLeft}</strong>s — click anywhere to skip`;
+      }
+    }, 1000);
+
+    document.getElementById('landing').addEventListener('click', go);
+    document.getElementById('enterBtn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      go();
+    });
+  </script>
+</body>
+</html>
